@@ -10,10 +10,9 @@ Feature: Calling Users from an Api
         When I send a "GET" request to "/companies"
         Then the response code should be 200
         And the response should be JSON
-        And the JSON node "users" should have 20 elements
+        And the JSON node "companies" should have 4 elements
         And the JSON node "page" should exist
         And the JSON node "total" should exist
-        And the JSON node "company" should exist
         And the JSON node "address" should exist
 
     Scenario: GET "/companies/2"
@@ -21,12 +20,8 @@ Feature: Calling Users from an Api
         Then the response code should be 200
         And the response should be JSON
         And the JSON node "total" should equal 1
-        And the JSON node "user.name" should equal 'Ervin Howell'
-        And the JSON node "user.username" should equal 'ehowell'
-        And the JSON node "user.email" should equal 'shanna@melissa.tv'
-        And the JSON node "user.phone" should equal '020-7365-9514'
-        And the JSON node "user.website" should equal 'shanna.net'
-        And the JSON node "company" should exist
+        And the JSON node "company.name" should equal 'Deckow-Crist'
+        And the JSON node "company.catch_phrase" should equal 'Proactive didactic contingency'
         And the JSON node "address" should exist
 
     Scenario: GET "/companies/FAKE"
