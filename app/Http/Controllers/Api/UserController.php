@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 
 class UserController extends Controller
 {
+    /**
+     * @var User
+     */
+    protected $user;
 
+    /**
+     * UserController constructor.
+     * @param User $user
+     */
     public function __construct(User $user)
     {
         $this->user = $user;

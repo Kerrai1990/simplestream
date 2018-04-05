@@ -2,13 +2,21 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use Illuminate\Http\Response;
 
 class CompanyController extends Controller
 {
+    /**
+     * @var Company
+     */
+    protected $company;
 
+    /**
+     * CompanyController constructor.
+     * @param Company $company
+     */
     public function __construct(Company $company)
     {
         $this->company = $company;
@@ -31,7 +39,7 @@ class CompanyController extends Controller
             'total' => $companies->count(),
             'page' => $companies->currentPage(),
             'companies' => $companies->toArray()['data'],
-        ]);
+        ])->setStatusCode(200);
 
     }
 
@@ -46,7 +54,7 @@ class CompanyController extends Controller
         $company = $this->company->find($id);
 
         if(is_null($company)) {
-            return response()->json()->setStatusCode('404');
+            return response()->json()->setStatusCode(404);
         }
 
         $result = $company->toArray();
@@ -55,6 +63,6 @@ class CompanyController extends Controller
         return response()->json([
             'total' => count($company),
             'company' => $result,
-        ]);
+        ])->setStatusCode(200);
     }
 }

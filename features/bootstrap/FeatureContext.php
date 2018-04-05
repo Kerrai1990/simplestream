@@ -1,17 +1,7 @@
-
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
 use Tests\TestCase;
-use Behat\Behat\Tester\Exception\PendingException;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\User;
-use Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
-use Illuminate\Contracts\Console\Kernel;
-use Illuminate\Http\JsonResponse;
 
 /**
  * Defines application features from the specific context.
@@ -19,20 +9,37 @@ use Illuminate\Http\JsonResponse;
 class FeatureContext extends TestCase implements Context
 {
 
-    protected $response, $content;
+    /**
+     * @var string
+     */
+    protected $response;
+
+    /**
+     * @var string
+     */
+    protected $content;
+
+    /**
+     * @var string
+     */
     protected $baseUrl = '/api/v1';
 
+    /**
+     * FeatureContext constructor.
+     */
     public function __construct()
     {
         parent::setUp();
     }
 
     /**
+     * @param string $arg1
+     * @param string $arg2
      * @When I send a :arg1 request to :arg2
      */
-    public function iSendARequestTo($arg1, $arg2)
+    public function iSendARequestTo(string $arg1, string $arg2): void
     {
-        $request = $this->get($this->baseUrl.$arg2);
+        $request = $this->{$arg1}($this->baseUrl.$arg2);
 
         $this->response = $request;
 
@@ -40,9 +47,10 @@ class FeatureContext extends TestCase implements Context
     }
 
     /**
+     * @param string arg1
      * @Then the response code should be :arg1
      */
-    public function theResponseCodeShouldBe($arg1)
+    public function theResponseCodeShouldBe(string $arg1): void
     {
         $this->assertEquals($arg1, $this->response->getStatusCode());
     }
@@ -50,15 +58,17 @@ class FeatureContext extends TestCase implements Context
     /**
      * @Then the response should be JSON
      */
-    public function theResponseShouldBeJson()
+    public function theResponseShouldBeJson(): void
     {
         $this->assertTrue($this->response->baseResponse instanceof \Illuminate\Http\JsonResponse);
     }
 
     /**
+     * @param string $arg1
+     * @param string $arg2
      * @Then the JSON node :arg1 should have :arg2 elements
      */
-    public function theJsonNodeShouldHaveElements($arg1, $arg2)
+    public function theJsonNodeShouldHaveElements(string $arg1, string $arg2) : void
     {
         $element = json_decode($this->content, true)[$arg1];
 
@@ -66,19 +76,23 @@ class FeatureContext extends TestCase implements Context
     }
 
     /**
+     * @param string $arg1
      * @Then the JSON node :arg1 should exist
      */
-    public function theJsonNodeShouldExist($arg1)
+    public function theJsonNodeShouldExist($arg1) : void
     {
         $this->assertContains($arg1, $this->content);
     }
 
     /**
+     * @param string $arg1
+     * @param string $arg2
      * @Then the JSON node :arg1 should equal :arg2
      */
-    public function theJsonNodeShouldEqual($arg1, $arg2)
+    public function theJsonNodeShouldEqual(string $arg1, string $arg2) : void
     {
         $keyval = explode('.', $arg1);
+
         if(count($keyval) > 1) {
             $this->assertEquals(json_decode($this->content, true)[$keyval[0]][$keyval[1]], $arg2);
         } else {
